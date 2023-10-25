@@ -1,23 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { Error404Component } from './components/error404/error404.component';
+import { HeaderComponent } from './components/header/header.component';
 
 
 
 @NgModule({
   declarations: [
     FooterComponent,
-    NavbarComponent,
-    Error404Component
+    Error404Component,
+    HeaderComponent
   ],
   imports: [
     CommonModule
   ],
   exports: [
     FooterComponent,
-    NavbarComponent
+    HeaderComponent
   ]
 })
 export class SharedModule { }
