@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/core/Models';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +11,15 @@ import { AuthService } from 'src/app/core/services/auth.service';
 
 export class LoginComponent implements  OnInit{
 
-  public usuarioLogueado: Usuario = new Usuario();
+  public usuarioLogueado: Usuario = {
+    id: null,
+    nombreUsuario: null,
+    email: null,
+    contrasenia: null
+  };
 
   constructor(
-    private auth:AuthService, 
+    private apiService: ApiService, 
     private router: Router
     ) { }
 
@@ -26,16 +31,21 @@ export class LoginComponent implements  OnInit{
   }
 
   public inicioSesion() {
-    if (this.usuarioLogueado.email != null && this.usuarioLogueado.contrasenia != null) {
-
-      this.auth.ingreso(this.usuarioLogueado.email, this.usuarioLogueado.contrasenia).then((respuesta) => {
-        if (respuesta) {
-          this.router.navigate(['home']);
+    
+    //utilizamos la funcion del servicio para obtener el usuario por email y contraseña 
+    //nos suscribimos al observable que nos devuelve la funcion
+    this.apiService.obtenerUsuarioPorEmailYContrasenia(this.usuarioLogueado.email!, this.usuarioLogueado.contrasenia!).subscribe({
+      
+      next: (result) =>{
+        if(result){
+          //si el usuario existe, nos redirige al home
+          this.router.navigate(["/home"])
         }
-      }).catch((error) => {
-        console.log(error);
-      });
-    }
+      },
+      //si no existe, nos muestra un mensaje de error
+      error: (error) => console.log(error)
+    })
+  
   }
 
 }
